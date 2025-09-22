@@ -18,7 +18,8 @@ class CocomoController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Project::orderBy('created_at', 'desc')->paginate(10);
+        return view('cocomo.index', compact('projects'));
     }
 
     /**
@@ -27,6 +28,10 @@ class CocomoController extends Controller
     public function create()
     {
         //
+        $scaleFactors = ScaleFactor::cases();
+        $costDrivers = CostDriver::cases();
+
+        return view('cocomo.create', compact('scaleFactors', 'costDrivers'));
     }
 
     /**
@@ -187,5 +192,54 @@ class CocomoController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Show form for inputting actual project data
+     */
+    public function actualDataForm(string $id)
+    {
+        $project = Project::findOrFail($id);
+        return view('cocomo.actual-data', compact('project'));
+    }
+
+    /**
+     * Update actual project data
+     */
+    public function updateActual(Request $request, string $id)
+    {
+        $project = Project::findOrFail($id);
+        
+        $validated = $request->validate([
+            'status' => 'required|in:planning,in_progress,completed,cancelled',
+            'actual_start_date' => 'nullable|date',
+            'actual_end_date' => 'nullable|date|after_or_equal:actual_start_date',
+            'actual_schedule' => 'nullable|numeric|min:0',
+            'actual_personnel' => 'nullable|integer|min:0',
+            'actual_sloc' => 'nullable|integer|min:0',
+            'actual_notes' => 'nullable|string|max:1000'
+        ], [
+            'actual_end_date.after_or_equal' => 'Tanggal selesai harus setelah atau sama dengan tanggal mulai.',
+            'actual_schedule.min' => 'Durasi aktual harus bernilai positif.',
+            'actual_personnel.min' => 'Jumlah tim aktual harus bernilai positif.',
+            'actual_sloc.min' => 'SLOC aktual harus bernilai positif.',
+            'actual_notes.max' => 'Catatan tidak boleh lebih dari 1000 karakter.'
+        ]);
+        
+        // Auto-calculate effort based on schedule and personnel
+        if (isset($validated['actual_schedule']) && isset($validated['actual_personnel'])) {
+            $validated['actual_effort'] = $validated['actual_schedule'] * $validated['actual_personnel'];
+        }
+        
+        $project->update($validated);
+        
+        // Calculate accuracy if project is completed and has actual data
+        if ($project->status === 'completed' && $project->actual_effort && $project->actual_schedule) {
+            $project->calculateAccuracy();
+        }
+        
+        return redirect()->route('cocomo.show', $project->id)
+            ->with('success', 'Data aktual berhasil disimpan! Effort dihitung otomatis: ' . 
+                   number_format($validated['actual_effort'] ?? 0, 1) . ' person-months.');
     }
 }

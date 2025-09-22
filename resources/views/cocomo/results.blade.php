@@ -2,15 +2,12 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Hasil Estimasi COCOMO') }}
+                {{ __('Software Cost Estimation Result using COCOMO') }}
             </h2>
-            <a href="{{ route('dashboard') }}" class="inline-flex items-center px-4 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                {{ __('Create Estimation') }}
-            </a>
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Success Message -->
             @if(session('success'))
@@ -20,7 +17,7 @@
             @endif
 
             <!-- Project Summary Card -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                 <div class="p-6 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Proyek</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -56,12 +53,28 @@
                             <label class="block text-sm font-bold text-gray-700">ID Proyek</label>
                             <p class="mt-1 text-sm text-gray-900">#{{ $project->id }}</p>
                         </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700">Status</label>
+                                <p class="mt-1 text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $project->status ?? 'planning')) }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700">Tanggal Mulai Aktual</label>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{ $project->actual_start_date ? $project->actual_start_date->format('d F Y') : '-' }}
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700">Tanggal Selesai Aktual</label>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    {{ $project->actual_end_date ? $project->actual_end_date->format('d F Y') : '-' }}
+                                </p>
+                            </div>
                     </div>
                 </div>
             </div>
 
             <!-- Function Point Breakdown Detail -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Detail Function Point Components</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -95,7 +108,7 @@
             </div>
 
             <!-- Project Size Summary Card -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Ringkasan Ukuran Proyek</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -148,7 +161,7 @@
             </div>
 
             <!-- Results Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                 <!-- Effort Card -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
@@ -294,7 +307,7 @@
             </div>
 
             <!-- Calculation Details -->
-            <div class="mt-6 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="mt-4 mb-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Interpretasi Hasil</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -356,20 +369,316 @@
                 </div>
             </div>
 
+            
+            <!-- Actual Data & Accuracy Section -->
+            @if($project->actual_effort || $project->actual_schedule || $project->actual_personnel || $project->status !== 'planning')
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-2">
+                    <div class="p-4 pb-1">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900">Data Aktual & Akurasi</h3>
+                            <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full {{ $project->status_badge_color }}">
+                                {{ ucfirst(str_replace('_', ' ', $project->status ?? 'planning')) }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        @if($project->actual_effort && $project->actual_schedule && $project->actual_personnel)
+                            <!-- Comparison Table -->
+                            <div class="overflow-x-auto mb-4">
+                                <table class="w-full border-collapse border border-gray-300">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="border border-gray-300 px-4 py-2 text-left font-semibold">Metrik</th>
+                                            <th class="border border-gray-300 px-4 py-2 text-center font-semibold">Estimasi</th>
+                                            <th class="border border-gray-300 px-4 py-2 text-center font-semibold">Aktual</th>
+                                            <th class="border border-gray-300 px-4 py-2 text-center font-semibold">Akurasi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2 font-medium">Effort (Person-Months)</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->calculated_effort, 1) }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->actual_effort, 1) }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">
+                                                @if($project->effort_accuracy)
+                                                    <div class="flex flex-col items-center">
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                                            {{ $project->effort_accuracy <= 0.25 ? 'bg-green-500 text-white' : 
+                                                               ($project->effort_accuracy <= 0.50 ? 'bg-blue-500 text-white' : 
+                                                               ($project->effort_accuracy <= 0.75 ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white')) }}">
+                                                            {{ number_format($project->effort_accuracy, 3) }}
+                                                        </span>
+                                                        <span class="text-xs mt-1 
+                                                            {{ $project->effort_accuracy <= 0.25 ? 'text-green-600' : 
+                                                               ($project->effort_accuracy <= 0.50 ? 'text-blue-600' : 
+                                                               ($project->effort_accuracy <= 0.75 ? 'text-yellow-600' : 'text-red-600')) }}">
+                                                            @if($project->effort_accuracy <= 0.25)
+                                                                Excellent
+                                                            @elseif($project->effort_accuracy <= 0.50)
+                                                                Good
+                                                            @elseif($project->effort_accuracy <= 0.75)
+                                                                Fair
+                                                            @else
+                                                                Poor
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <span class="text-gray-400">N/A</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2 font-medium">Schedule (Bulan)</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->calculated_schedule, 1) }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->actual_schedule, 1) }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">
+                                                @if($project->schedule_accuracy)
+                                                    <div class="flex flex-col items-center">
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                                            {{ $project->schedule_accuracy <= 0.25 ? 'bg-green-500 text-white' : 
+                                                               ($project->schedule_accuracy <= 0.50 ? 'bg-blue-500 text-white' : 
+                                                               ($project->schedule_accuracy <= 0.75 ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white')) }}">
+                                                            {{ number_format($project->schedule_accuracy, 3) }}
+                                                        </span>
+                                                        <span class="text-xs mt-1 
+                                                            {{ $project->schedule_accuracy <= 0.25 ? 'text-green-600' : 
+                                                               ($project->schedule_accuracy <= 0.50 ? 'text-blue-600' : 
+                                                               ($project->schedule_accuracy <= 0.75 ? 'text-yellow-600' : 'text-red-600')) }}">
+                                                            @if($project->schedule_accuracy <= 0.25)
+                                                                Excellent
+                                                            @elseif($project->schedule_accuracy <= 0.50)
+                                                                Good
+                                                            @elseif($project->schedule_accuracy <= 0.75)
+                                                                Fair
+                                                            @else
+                                                                Poor
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <span class="text-gray-400">N/A</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-gray-300 px-4 py-2 font-medium">Personnel (Orang)</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->calculated_personnel, 0) }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->actual_personnel, 0) }}</td>
+                                            <td class="border border-gray-300 px-4 py-2 text-center">
+                                                @if($project->personnel_accuracy)
+                                                    <div class="flex flex-col items-center">
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                                            {{ $project->personnel_accuracy <= 0.25 ? 'bg-green-500 text-white' : 
+                                                               ($project->personnel_accuracy <= 0.50 ? 'bg-blue-500 text-white' : 
+                                                               ($project->personnel_accuracy <= 0.75 ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white')) }}">
+                                                            {{ number_format($project->personnel_accuracy, 3) }}
+                                                        </span>
+                                                        <span class="text-xs mt-1 
+                                                            {{ $project->personnel_accuracy <= 0.25 ? 'text-green-600' : 
+                                                               ($project->personnel_accuracy <= 0.50 ? 'text-blue-600' : 
+                                                               ($project->personnel_accuracy <= 0.75 ? 'text-yellow-600' : 'text-red-600')) }}">
+                                                            @if($project->personnel_accuracy <= 0.25)
+                                                                Excellent
+                                                            @elseif($project->personnel_accuracy <= 0.50)
+                                                                Good
+                                                            @elseif($project->personnel_accuracy <= 0.75)
+                                                                Fair
+                                                            @else
+                                                                Poor
+                                                            @endif
+                                                        </span>
+                                                    </div>
+                                                @else
+                                                    <span class="text-gray-400">N/A</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @if($project->actual_sloc && $project->total_sloc)
+                                            <tr>
+                                                <td class="border border-gray-300 px-4 py-2 font-medium">SLOC</td>
+                                                <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->total_sloc) }}</td>
+                                                <td class="border border-gray-300 px-4 py-2 text-center">{{ number_format($project->actual_sloc) }}</td>
+                                                <td class="border border-gray-300 px-4 py-2 text-center">
+                                                    @if($project->sloc_accuracy)
+                                                        <div class="flex flex-col items-center">
+                                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                                                                {{ $project->sloc_accuracy <= 0.25 ? 'bg-green-500 text-white' : 
+                                                                   ($project->sloc_accuracy <= 0.50 ? 'bg-blue-500 text-white' : 
+                                                                   ($project->sloc_accuracy <= 0.75 ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white')) }}">
+                                                                {{ number_format($project->sloc_accuracy, 3) }}
+                                                            </span>
+                                                            <span class="text-xs mt-1 
+                                                                {{ $project->sloc_accuracy <= 0.25 ? 'text-green-600' : 
+                                                                   ($project->sloc_accuracy <= 0.50 ? 'text-blue-600' : 
+                                                                   ($project->sloc_accuracy <= 0.75 ? 'text-yellow-600' : 'text-red-600')) }}">
+                                                                @if($project->sloc_accuracy <= 0.25)
+                                                                    Excellent
+                                                                @elseif($project->sloc_accuracy <= 0.50)
+                                                                    Good
+                                                                @elseif($project->sloc_accuracy <= 0.75)
+                                                                    Fair
+                                                                @else
+                                                                    Poor
+                                                                @endif
+                                                            </span>
+                                                        </div>
+                                                    @else
+                                                        <span class="text-gray-400">N/A</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Overall Accuracy -->
+                            @if($project->overall_accuracy)
+                                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-lg font-semibold text-gray-900">MMRE Keseluruhan:</span>
+                                        <span class="inline-flex px-3 py-1 text-lg font-bold rounded-full 
+                                            {{ $project->overall_accuracy <= 0.25 ? 'bg-green-500 text-white' : 
+                                               ($project->overall_accuracy <= 0.50 ? 'bg-blue-500 text-white' : 
+                                               ($project->overall_accuracy <= 0.75 ? 'bg-yellow-500 text-white' : 'bg-red-500 text-white')) }}">
+                                            {{ number_format($project->overall_accuracy, 3) }}
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- MMRE Interpretation -->
+                                    <div class="mt-3 p-3 border-l-4 
+                                        {{ $project->overall_accuracy <= 0.25 ? 'border-green-500 bg-green-50' : 
+                                           ($project->overall_accuracy <= 0.50 ? 'border-blue-500 bg-blue-50' : 
+                                           ($project->overall_accuracy <= 0.75 ? 'border-yellow-500 bg-yellow-50' : 'border-red-500 bg-red-50')) }}">
+                                        <p class="text-sm font-medium 
+                                            {{ $project->overall_accuracy <= 0.25 ? 'text-green-800' : 
+                                               ($project->overall_accuracy <= 0.50 ? 'text-blue-800' : 
+                                               ($project->overall_accuracy <= 0.75 ? 'text-yellow-800' : 'text-red-800')) }}">
+                                            Interpretasi:
+                                            @if($project->overall_accuracy <= 0.25)
+                                                <strong>Excellent (≤ 0.25)</strong> - Estimasi sangat akurat, model COCOMO bekerja dengan baik untuk proyek ini.
+                                            @elseif($project->overall_accuracy <= 0.50)
+                                                <strong>Good (0.25 - 0.50)</strong> - Estimasi cukup baik, dapat diterima untuk kebanyakan proyek software.
+                                            @elseif($project->overall_accuracy <= 0.75)
+                                                <strong>Fair (0.50 - 0.75)</strong> - Estimasi kurang akurat, perlu perbaikan model atau kalibrasi parameter.
+                                            @else
+                                                <strong>Poor (> 0.75)</strong> - Estimasi tidak akurat, kemungkinan ada masalah data atau model tidak cocok untuk proyek ini.
+                                            @endif
+                                        </p>
+                                        
+                                        <!-- Additional Context -->
+                                        <div class="mt-2 text-xs 
+                                            {{ $project->overall_accuracy <= 0.25 ? 'text-green-700' : 
+                                               ($project->overall_accuracy <= 0.50 ? 'text-blue-700' : 
+                                               ($project->overall_accuracy <= 0.75 ? 'text-yellow-700' : 'text-red-700')) }}">
+                                            @if($project->overall_accuracy <= 0.25)
+                                                <strong>Rekomendasi:</strong> Model dapat digunakan dengan confidence tinggi untuk proyek serupa.
+                                            @elseif($project->overall_accuracy <= 0.50)
+                                                <strong>Rekomendasi:</strong> Tambahkan buffer 10-20% pada estimasi untuk proyek serupa.
+                                            @elseif($project->overall_accuracy <= 0.75)
+                                                <strong>Rekomendasi:</strong> Review dan kalibrasi parameter COCOMO, pertimbangkan faktor lokal yang belum diakomodasi.
+                                            @else
+                                                <strong>Rekomendasi:</strong> Investigasi penyebab error tinggi - cek data input, scope change, atau gunakan metode estimasi alternatif.
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- MMRE Interpretation Guide -->
+                            @if($project->overall_accuracy)
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                        <div class="flex items-center mb-2">
+                                            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                            <span class="text-sm font-semibold text-green-800">Excellent (≤ 0.25)</span>
+                                        </div>
+                                        <p class="text-xs text-green-700">Error ≤ 25%. Estimasi sangat akurat, model bekerja optimal.</p>
+                                    </div>
+                                    <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <div class="flex items-center mb-2">
+                                            <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
+                                            <span class="text-sm font-semibold text-blue-800">Good (0.25 - 0.50)</span>
+                                        </div>
+                                        <p class="text-xs text-blue-700">Error 25-50%. Estimasi dapat diterima untuk mayoritas proyek.</p>
+                                    </div>
+                                    <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                        <div class="flex items-center mb-2">
+                                            <span class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                                            <span class="text-sm font-semibold text-yellow-800">Fair (0.50 - 0.75)</span>
+                                        </div>
+                                        <p class="text-xs text-yellow-700">Error 50-75%. Perlu perbaikan model atau kalibrasi.</p>
+                                    </div>
+                                    <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                                        <div class="flex items-center mb-2">
+                                            <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                                            <span class="text-sm font-semibold text-red-800">Poor (> 0.75)</span>
+                                        </div>
+                                        <p class="text-xs text-red-700">Error > 75%. Model tidak cocok atau ada masalah data.</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                                    <p class="text-sm text-gray-700">
+                                        <strong>Formula:</strong> MRE = |Actual - Estimated| / Actual. 
+                                        Semakin kecil nilai MRE, semakin akurat estimasi. 
+                                        MMRE adalah rata-rata MRE dari semua proyek.
+                                    </p>
+                                </div>
+                            @endif
+
+                            <!-- Notes -->
+                            @if($project->actual_notes)
+                                <h4 class="text-md font-semibold text-gray-800 mt-4 mb-1">Notes</h4>
+                                <div class="bg-white border rounded-lg p-4">
+                                    <p class="text-sm text-gray-700">{{ $project->actual_notes }}</p>
+                                </div>
+                            @endif
+                        @else
+                            <!-- Call to Action for Data Input -->
+                            <div class="text-center py-8">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900">Data aktual belum tersedia</h3>
+                                <p class="mt-1 text-sm text-gray-500">Input data aktual setelah proyek selesai untuk mengukur akurasi estimasi.</p>
+                                <div class="mt-6">
+                                    <a href="{{ route('cocomo.actual-data-form', $project->id) }}" 
+                                       class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                        </svg>
+                                        Input Data Aktual
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
             <!-- Action Buttons -->
-            <div class="mt-6 flex flex-col sm:flex-row gap-4">
-                <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+            <div class="mt-4 flex flex-col sm:flex-row gap-4">
+                <a href="{{ route('cocomo.actual-data-form', $project->id) }}" 
+                    class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                     </svg>
-                    {{ __('Estimasi Baru') }}
+                    {{ __('Input Actual Data Project') }}
+                </a>
+
+                <a href="{{ route('cocomo.create') }}" class="inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                    {{ __('New Software Cost Estimation') }}
                 </a>
                 
                 <button onclick="window.print()" class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/>
                     </svg>
-                    {{ __('Cetak Hasil') }}
+                    {{ __('Print') }}
                 </button>
             </div>
         </div>

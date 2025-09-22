@@ -11,22 +11,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Overall Statistics -->
             <div class="mb-4">
-                <div class="grid grid-cols-1 grid-cols-5 gap-6 mb-4">
-                    <div class="bg-white p-6 rounded-lg shadow">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0">
-                                <svg class="h-8 w-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-4">
-                                <h3 class="text-lg font-semibold text-gray-900">Total Project</h3>
-                                <p class="text-3xl font-bold text-gray-600">{{ $allProjects->count() }}</p>
-                                <p class="text-sm text-gray-500">Semua Project</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-4 gap-6">
                     <div class="bg-white p-6 rounded-lg shadow">
                         <div class="flex items-center">

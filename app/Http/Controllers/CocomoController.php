@@ -239,7 +239,6 @@ class CocomoController extends Controller
         }
         
         return redirect()->route('cocomo.show', $project->id)
-            ->with('success', 'Data aktual berhasil disimpan! Effort dihitung otomatis: ' . 
-                   number_format($validated['actual_effort'] ?? 0, 1) . ' person-months.');
+            ->with('success', 'Data aktual berhasil disimpan!');
     }
 }

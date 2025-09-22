@@ -16,11 +16,11 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('cocomo.index')" :active="request()->routeIs('cocomo.index') || request()->routeIs('cocomo.show')">
+                        {{ __('Projects') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('cocomo.create')" :active="request()->routeIs('cocomo.create')">
                         {{ __('Create Estimation') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('cocomo.index')" :active="request()->routeIs('cocomo.index') || request()->routeIs('cocomo.show')">
-                        {{ __('Project List') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -74,11 +74,11 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('cocomo.index')" :active="request()->routeIs('cocomo.index') || request()->routeIs('cocomo.show')">
+                {{ __('Projects') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Create Estimation') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('cocomo.index')" :active="request()->routeIs('cocomo.index') || request()->routeIs('cocomo.show')">
-                {{ __('Project List') }}
             </x-responsive-nav-link>
         </div>
 

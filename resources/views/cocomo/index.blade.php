@@ -11,7 +11,6 @@
 
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if($projects->count() > 0)
                 <!-- Portfolio Summary Dashboard -->
                 <div class="mb-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     @php
@@ -340,68 +339,6 @@
                         </div>
                     </div>
                 </div>
-
-            @else
-                <!-- Enhanced Empty State -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="text-center py-16">
-                        <div class="mx-auto h-24 w-24 text-gray-400 mb-4">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-full h-full">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-medium text-gray-900 mb-2">No Projects Yet</h3>
-                        <p class="text-gray-500 mb-8 max-w-md mx-auto">
-                            Start building your project portfolio by creating your first COCOMO estimation project. 
-                            Track effort, schedule, and team requirements with professional accuracy.
-                        </p>
-                        
-                        <!-- Getting Started Actions -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8">
-                            <div class="p-4 border border-gray-200 rounded-lg">
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                    </svg>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-1">Create Project</h4>
-                                <p class="text-xs text-gray-500">Start with function points or direct KLOC input</p>
-                            </div>
-                            <div class="p-4 border border-gray-200 rounded-lg">
-                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                                    </svg>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-1">Configure Parameters</h4>
-                                <p class="text-xs text-gray-500">Set scale factors and cost drivers</p>
-                            </div>
-                            <div class="p-4 border border-gray-200 rounded-lg">
-                                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                </div>
-                                <h4 class="font-medium text-gray-900 mb-1">Get Estimates</h4>
-                                <p class="text-xs text-gray-500">View detailed effort and schedule analysis</p>
-                            </div>
-                        </div>
-                        
-                        <div class="space-y-3">
-                            <a href="{{ route('dashboard') }}" 
-                               class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                </svg>
-                                Create Your First Project
-                            </a>
-                            <div class="text-xs text-gray-400">
-                                <p>COCOMO II model • Professional estimation • Comprehensive analysis</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
 </x-app-layout>

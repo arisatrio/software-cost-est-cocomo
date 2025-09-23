@@ -227,21 +227,21 @@
                                 <p class="text-sm text-gray-600 mb-4">Bagaimana Anda menilai tingkat kompleksitas keseluruhan dari aplikasi yang akan dikembangkan?</p>
                                 <div class="space-y-2">
                                     <label class="flex items-start space-x-3 cursor-pointer">
-                                        <input type="radio" name="complexity_factor" value="simple" class="mt-1" {{ old('complexity_factor') == 'simple' ? 'checked' : '' }} required>
+                                        <input type="radio" name="complexity_factor" value="low" class="mt-1" {{ old('complexity_factor') == 'low' ? 'checked' : '' }} required>
                                         <div class="flex-1">
                                             <div class="font-medium text-gray-800">(A) Sederhana</div>
                                             <div class="text-sm text-gray-600">Aplikasi standar dengan logika bisnis yang mudah dipahami</div>
                                         </div>
                                     </label>
                                     <label class="flex items-start space-x-3 cursor-pointer">
-                                        <input type="radio" name="complexity_factor" value="average" class="mt-1" {{ old('complexity_factor') == 'average' ? 'checked' : '' }}>
+                                        <input type="radio" name="complexity_factor" value="medium" class="mt-1" {{ old('complexity_factor') == 'medium' ? 'checked' : '' }}>
                                         <div class="flex-1">
                                             <div class="font-medium text-gray-800">(B) Menengah</div>
                                             <div class="text-sm text-gray-600">Aplikasi dengan beberapa aturan bisnis dan workflow yang cukup kompleks</div>
                                         </div>
                                     </label>
                                     <label class="flex items-start space-x-3 cursor-pointer">
-                                        <input type="radio" name="complexity_factor" value="complex" class="mt-1" {{ old('complexity_factor') == 'complex' ? 'checked' : '' }}>
+                                        <input type="radio" name="complexity_factor" value="high" class="mt-1" {{ old('complexity_factor') == 'high' ? 'checked' : '' }}>
                                         <div class="flex-1">
                                             <div class="font-medium text-gray-800">(C) Kompleks</div>
                                             <div class="text-sm text-gray-600">Aplikasi dengan logika bisnis yang sangat kompleks, algoritma khusus, atau real-time processing</div>
@@ -249,6 +249,40 @@
                                     </label>
                                 </div>
                                 @error('complexity_factor')
+                                    <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Project Category (COCOMO II) -->
+                            <div class="mb-6 p-4 bg-white rounded-lg border">
+                                <h4 class="font-semibold text-gray-800 mb-3">7. Kategori Proyek COCOMO II</h4>
+                                <p class="text-sm text-gray-600 mb-4">Pilih kategori proyek yang paling sesuai dengan karakteristik proyek Anda:</p>
+                                <div class="space-y-3">
+                                    @foreach($projectCategories as $category)
+                                    <label class="flex items-start space-x-3 cursor-pointer p-3 border rounded-lg hover:bg-gray-50">
+                                        <input type="radio" name="project_category" value="{{ $category->value }}" class="mt-1" 
+                                               {{ old('project_category') == $category->value ? 'checked' : '' }} required>
+                                        <div class="flex-1">
+                                            <div class="font-medium text-gray-800 flex items-center">
+                                                {{ $category->label() }}
+                                                <span class="ml-2 px-2 py-1 text-xs rounded-full {{ $category->colorClass() }}">
+                                                    {{ ucfirst($category->value) }}
+                                                </span>
+                                            </div>
+                                            <div class="text-sm text-gray-600 mt-1">{{ $category->description() }}</div>
+                                            <div class="text-xs text-gray-500 mt-2">
+                                                <strong>Karakteristik:</strong>
+                                                <ul class="mt-1 space-y-1">
+                                                    @foreach($category->characteristics() as $characteristic)
+                                                    <li>• {{ $characteristic }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    @endforeach
+                                </div>
+                                @error('project_category')
                                     <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -343,9 +377,9 @@
 
         // Complexity multipliers
         const complexityMultipliers = {
-            'simple': 10,
-            'average': 14,
-            'complex': 16
+            'low': 10,
+            'medium': 14,
+            'high': 16
         };
 
         // Mapping kuisioner ke nilai Function Point
@@ -388,6 +422,9 @@
             const complexity = getSelectedValue('complexity_factor');
             const language = document.getElementById('programming_language').value;
 
+            // Debug logging
+            console.log('Inputs:', { inputs, outputs, inquiries, internalFiles, externalFiles, complexity, language });
+
             // Calculate unadjusted function points using questionnaire values
             const unadjustedFP = (inputs * fpWeights.external_inputs) +
                                  (outputs * fpWeights.external_outputs) +
@@ -396,7 +433,7 @@
                                  (externalFiles * fpWeights.external_files);
 
             // Apply complexity adjustment
-            const complexityFactor = complexityMultipliers[complexity] / 10;
+            const complexityFactor = complexityMultipliers[complexity] ? complexityMultipliers[complexity] / 10 : 1.0;
             const adjustedFP = unadjustedFP * complexityFactor;
 
             // Convert to SLOC
@@ -407,15 +444,20 @@
                 kloc = sloc / 1000;
             }
 
+            // Ensure values are not NaN
+            const finalFP = isNaN(adjustedFP) ? 0 : adjustedFP;
+            const finalSLOC = isNaN(sloc) ? 0 : sloc;
+            const finalKLOC = isNaN(kloc) ? 0 : kloc;
+
             // Update display
-            document.getElementById('fp-total').textContent = Math.round(adjustedFP) + ' FP';
-            document.getElementById('sloc-total').textContent = sloc.toLocaleString() + ' SLOC';
-            document.getElementById('kloc-total').textContent = kloc.toFixed(2) + ' KLOC';
+            document.getElementById('fp-total').textContent = Math.round(finalFP) + ' FP';
+            document.getElementById('sloc-total').textContent = finalSLOC.toLocaleString() + ' SLOC';
+            document.getElementById('kloc-total').textContent = finalKLOC.toFixed(2) + ' KLOC';
 
             // Update hidden fields
-            document.getElementById('hidden_kloc').value = kloc;
-            document.getElementById('hidden_function_points').value = adjustedFP;
-            document.getElementById('hidden_total_sloc').value = sloc;
+            document.getElementById('hidden_kloc').value = finalKLOC;
+            document.getElementById('hidden_function_points').value = finalFP;
+            document.getElementById('hidden_total_sloc').value = finalSLOC;
             document.getElementById('hidden_external_inputs').value = inputs;
             document.getElementById('hidden_external_outputs').value = outputs;
             document.getElementById('hidden_external_inquiries').value = inquiries;
@@ -423,9 +465,9 @@
             document.getElementById('hidden_external_files').value = externalFiles;
 
             return {
-                functionPoints: adjustedFP,
-                sloc: sloc,
-                kloc: sloc / 1000,
+                functionPoints: finalFP,
+                sloc: finalSLOC,
+                kloc: finalKLOC,
                 // Hidden values for backend
                 external_inputs: inputs,
                 external_outputs: outputs,

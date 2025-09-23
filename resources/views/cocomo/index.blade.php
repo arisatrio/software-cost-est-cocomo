@@ -35,81 +35,65 @@
                     @endphp
                     
                     <!-- Total Projects Card -->
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="ml-4">
-                                    <h4 class="text-lg font-semibold text-gray-900">{{ number_format($totalProjects) }}</h4>
-                                    <p class="text-sm text-gray-500">Total Projects</p>
-                                    <p class="text-xs text-blue-600 mt-1">{{ $completedProjects }} Completed</p>
-                                </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Total Projects</h3>
+                                <p class="text-3xl font-bold text-blue-600">{{ number_format($totalProjects) }}</p>
+                                <p class="text-sm text-gray-500">{{ $completedProjects }} Completed</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Total Effort Card -->
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="ml-4">
-                                    <h4 class="text-lg font-semibold text-gray-900">{{ number_format($totalEffort, 1) }}</h4>
-                                    <p class="text-sm text-gray-500">Total Effort</p>
-                                    <p class="text-xs text-green-600 mt-1">Person-Months</p>
-                                </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Total Effort</h3>
+                                <p class="text-3xl font-bold text-green-600">{{ number_format($totalEffort, 1) }}</p>
+                                <p class="text-sm text-gray-500">Person-Months</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Average Schedule Card -->
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="ml-4">
-                                    <h4 class="text-lg font-semibold text-gray-900">{{ number_format($avgSchedule, 1) }}</h4>
-                                    <p class="text-sm text-gray-500">Avg. Duration</p>
-                                    <p class="text-xs text-purple-600 mt-1">Months</p>
-                                </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-8 w-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Avg. Duration</h3>
+                                <p class="text-3xl font-bold text-purple-600">{{ number_format($avgSchedule, 1) }}</p>
+                                <p class="text-sm text-gray-500">Months</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Total Code Size Card -->
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0">
-                                    <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="ml-4">
-                                    <h4 class="text-lg font-semibold text-gray-900">{{ number_format($totalKLOC, 1) }}</h4>
-                                    <p class="text-sm text-gray-500">Total Code Size</p>
-                                    <p class="text-xs text-yellow-600 mt-1">KLOC</p>
-                                </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-8 w-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                                </svg>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-semibold text-gray-900">Total Code Size</h3>
+                                <p class="text-3xl font-bold text-yellow-600">{{ number_format($totalKLOC, 1) }}</p>
+                                <p class="text-sm text-gray-500">KLOC</p>
                             </div>
                         </div>
                     </div>
@@ -221,6 +205,24 @@
                                                 </div>
                                             @endif
 
+                                            @if($project->project_category)
+                                                <div class="flex justify-between text-sm">
+                                                    <span class="text-gray-600 flex items-center">
+                                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                                        </svg>
+                                                        Project Category:
+                                                    </span>
+                                                    <span class="font-bold text-black">
+                                                        @if($project->project_category)
+                                                            {{ $project->project_category->label() }}
+                                                        @else
+                                                            Organic
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            @endif
+
                                             @if($project->calculated_effort)
                                                 <div class="flex justify-between text-sm pt-2 border-t border-gray-100">
                                                     <span class="text-gray-600 flex items-center">
@@ -322,11 +324,6 @@
                                                 </svg>
                                                 View Details
                                             </a>
-                                            <button class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                                                </svg>
-                                            </button>
                                         </div>
                                     </div>
                                 </div>

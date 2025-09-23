@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Enums\ProjectCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,6 +25,7 @@ class Project extends Model
         'internal_files',
         'external_files',
         'complexity_factor',
+        'project_category',
         'function_points',
         'total_sloc',
         'calculated_effort',
@@ -56,6 +58,7 @@ class Project extends Model
         'effort_accuracy' => 'decimal:2',
         'schedule_accuracy' => 'decimal:2',
         'personnel_accuracy' => 'decimal:2',
+        'project_category' => ProjectCategory::class,
         'sloc_accuracy' => 'decimal:2',
         'overall_accuracy' => 'decimal:2',
         'actual_start_date' => 'date',
@@ -181,5 +184,22 @@ class Project extends Model
             'cancelled' => 'bg-red-100 text-red-800',
             default => 'bg-gray-100 text-gray-800'
         };
+    }
+
+    /**
+     * Get project category instance
+     */
+    public function getProjectCategoryAttribute()
+    {
+        return $this->project_category ?? ProjectCategory::ORGANIC;
+    }
+
+    /**
+     * Get project category coefficients
+     */
+    public function getCategoryCoefficientsAttribute()
+    {
+        $category = $this->project_category ?? ProjectCategory::ORGANIC;
+        return $category->coefficients();
     }
 }

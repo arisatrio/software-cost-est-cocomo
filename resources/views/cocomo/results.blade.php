@@ -20,10 +20,10 @@
             <!-- Project Summary Card -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                 <div class="p-6 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Informasi Proyek</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Project Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700">Nama Proyek</label>
+                            <label class="block text-sm font-bold text-gray-700">Nama Project</label>
                             <p class="mt-1 text-sm text-gray-900">{{ $project->name }}</p>
                         </div>
                         <div>
@@ -39,7 +39,7 @@
                             <p class="mt-1 text-sm text-gray-900">{{ number_format($project->total_sloc ?? 0) }} SLOC</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700">Ukuran Proyek (KLOC)</label>
+                            <label class="block text-sm font-bold text-gray-700">Ukuran Project (KLOC)</label>
                             <p class="mt-1 text-sm text-gray-900">{{ number_format($project->kloc, 2) }} KLOC</p>
                         </div>
                         <div>
@@ -51,7 +51,7 @@
                             <p class="mt-1 text-sm text-gray-900">{{ $project->created_at->format('d F Y, H:i') }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700">ID Proyek</label>
+                            <label class="block text-sm font-bold text-gray-700">ID Project</label>
                             <p class="mt-1 text-sm text-gray-900">#{{ $project->id }}</p>
                         </div>
                             <div>
@@ -73,6 +73,86 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Project Category Information -->
+            @if($project->project_category)
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Project Category</h3>
+                        
+                        <!-- Category Badge and Description -->
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <span class="inline-flex px-4 py-2 text-sm font-semibold rounded-full {{ $project->project_category->colorClass() }}">
+                                    {{ $project->project_category->label() }}
+                                </span>
+                            </div>
+                            <p class="text-gray-700">{{ $project->project_category->description() }}</p>
+                        </div>
+
+                        <!-- Category Characteristics -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                            @foreach($project->project_category->characteristics() as $characteristic)
+                                <div class="flex items-start p-3 bg-gray-50 rounded-lg">
+                                    <svg class="w-5 h-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="text-sm text-gray-700">{{ $characteristic }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- COCOMO II Coefficients -->
+                        <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                </svg>
+                                Koefisien COCOMO II
+                            </h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                @php $coefficients = $project->project_category->coefficients(); @endphp
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-blue-600">{{ $coefficients['A'] }}</div>
+                                    <div class="text-sm text-gray-600">Koefisien A</div>
+                                    <div class="text-xs text-gray-500">Effort coefficient</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-green-600">{{ $coefficients['B'] }}</div>
+                                    <div class="text-sm text-gray-600">Eksponen B</div>
+                                    <div class="text-xs text-gray-500">Effort exponent</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-purple-600">{{ $coefficients['C'] }}</div>
+                                    <div class="text-sm text-gray-600">Koefisien C</div>
+                                    <div class="text-xs text-gray-500">Schedule coefficient</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-lg font-bold text-orange-600">{{ $coefficients['D'] }}</div>
+                                    <div class="text-sm text-gray-600">Eksponen D</div>
+                                    <div class="text-xs text-gray-500">Schedule exponent</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Formula Display -->
+                            {{-- <div class="mt-4 p-3 bg-white border border-gray-200 rounded-lg">
+                                <div class="text-sm text-gray-700">
+                                    <div class="mb-2">
+                                        <strong>Formula yang digunakan:</strong>
+                                    </div>
+                                    <div class="font-mono text-xs bg-gray-100 p-2 rounded">
+                                        <div>Effort = A × Size<sup>B</sup> × ∏(Cost Drivers)</div>
+                                        <div class="mt-1">Schedule = C × Effort<sup>D</sup></div>
+                                    </div>
+                                    <div class="mt-2 text-xs text-gray-600">
+                                        Dengan A={{ $coefficients['A'] }}, B={{ $coefficients['B'] }}, C={{ $coefficients['C'] }}, D={{ $coefficients['D'] }}
+                                    </div>
+                                </div>
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <!-- Function Point Breakdown Detail -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
@@ -111,7 +191,7 @@
             <!-- Project Size Summary Card -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Ringkasan Ukuran Proyek</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Ringkasan Ukuran Project</h3>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="text-center p-4 bg-blue-50 rounded-lg">
                             <div class="text-2xl font-bold text-blue-600">{{ number_format($project->function_points ?? 0, 1) }}</div>
@@ -463,11 +543,11 @@
                         if ($scheduleIntensity === 'extended') $risks[] = 'Timeline terlalu panjang - risiko scope creep';
                         if ($avgTeamSize > 8) $risks[] = 'Tim besar - kompleksitas komunikasi tinggi';
                         if ($complexity === 'high') $risks[] = 'Kompleksitas teknis tinggi - butuh expertise';
-                        if ($kloc > 20) $risks[] = 'Proyek besar - butuh manajemen formal';
+                        if ($kloc > 20) $risks[] = 'Project besar - butuh manajemen formal';
                         
                         if ($teamEfficiency === 'high') $opportunities[] = 'Tim kecil - komunikasi efisien';
                         if ($scheduleIntensity === 'balanced') $opportunities[] = 'Timeline realistis - kualitas terjaga';
-                        if ($projectSize === 'small') $opportunities[] = 'Proyek kecil - fleksibilitas tinggi';
+                        if ($projectSize === 'small') $opportunities[] = 'Project kecil - fleksibilitas tinggi';
                         
                         // Calculate productivity metrics
                         $locPerPersonMonth = $effort > 0 ? round(($kloc * 1000) / $effort, 0) : 0;
@@ -576,7 +656,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
-                        <p class="text-sm text-gray-600 mt-1">Sesuaikan estimasi berdasarkan jumlah programmer atau waktu yang tersedia untuk proyek Anda.</p>
+                        <p class="text-sm text-gray-600 mt-1">Sesuaikan estimasi berdasarkan jumlah programmer atau waktu yang tersedia untuk Project Anda.</p>
                     </div>
                     
                     <div id="calculator-content" class="hidden">
@@ -987,13 +1067,13 @@
                                                ($project->overall_accuracy <= 0.75 ? 'text-yellow-800' : 'text-red-800')) }}">
                                             Interpretasi:
                                             @if($project->overall_accuracy <= 0.25)
-                                                <strong>Excellent (≤ 0.25)</strong> - Estimasi sangat akurat, model COCOMO bekerja dengan baik untuk proyek ini.
+                                                <strong>Excellent (≤ 0.25)</strong> - Estimasi sangat akurat, model COCOMO bekerja dengan baik untuk Project ini.
                                             @elseif($project->overall_accuracy <= 0.50)
-                                                <strong>Good (0.25 - 0.50)</strong> - Estimasi cukup baik, dapat diterima untuk kebanyakan proyek software.
+                                                <strong>Good (0.25 - 0.50)</strong> - Estimasi cukup baik, dapat diterima untuk kebanyakan Project software.
                                             @elseif($project->overall_accuracy <= 0.75)
                                                 <strong>Fair (0.50 - 0.75)</strong> - Estimasi kurang akurat, perlu perbaikan model atau kalibrasi parameter.
                                             @else
-                                                <strong>Poor (> 0.75)</strong> - Estimasi tidak akurat, kemungkinan ada masalah data atau model tidak cocok untuk proyek ini.
+                                                <strong>Poor (> 0.75)</strong> - Estimasi tidak akurat, kemungkinan ada masalah data atau model tidak cocok untuk Project ini.
                                             @endif
                                         </p>
                                         
@@ -1003,9 +1083,9 @@
                                                ($project->overall_accuracy <= 0.50 ? 'text-blue-700' : 
                                                ($project->overall_accuracy <= 0.75 ? 'text-yellow-700' : 'text-red-700')) }}">
                                             @if($project->overall_accuracy <= 0.25)
-                                                <strong>Rekomendasi:</strong> Model dapat digunakan dengan confidence tinggi untuk proyek serupa.
+                                                <strong>Rekomendasi:</strong> Model dapat digunakan dengan confidence tinggi untuk Project serupa.
                                             @elseif($project->overall_accuracy <= 0.50)
-                                                <strong>Rekomendasi:</strong> Tambahkan buffer 10-20% pada estimasi untuk proyek serupa.
+                                                <strong>Rekomendasi:</strong> Tambahkan buffer 10-20% pada estimasi untuk Project serupa.
                                             @elseif($project->overall_accuracy <= 0.75)
                                                 <strong>Rekomendasi:</strong> Review dan kalibrasi parameter COCOMO, pertimbangkan faktor lokal yang belum diakomodasi.
                                             @else
@@ -1031,7 +1111,7 @@
                                             <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
                                             <span class="text-sm font-semibold text-blue-800">Good (0.25 - 0.50)</span>
                                         </div>
-                                        <p class="text-xs text-blue-700">Error 25-50%. Estimasi dapat diterima untuk mayoritas proyek.</p>
+                                        <p class="text-xs text-blue-700">Error 25-50%. Estimasi dapat diterima untuk mayoritas Project.</p>
                                     </div>
                                     <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                                         <div class="flex items-center mb-2">
@@ -1052,7 +1132,7 @@
                                     <p class="text-sm text-gray-700">
                                         <strong>Formula:</strong> MRE = |Actual - Estimated| / Actual. 
                                         Semakin kecil nilai MRE, semakin akurat estimasi. 
-                                        MMRE adalah rata-rata MRE dari semua proyek.
+                                        MMRE adalah rata-rata MRE dari semua Project.
                                     </p>
                                 </div>
                             @endif
@@ -1071,7 +1151,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                 </svg>
                                 <h3 class="mt-2 text-sm font-medium text-gray-900">Data aktual belum tersedia</h3>
-                                <p class="mt-1 text-sm text-gray-500">Input data aktual setelah proyek selesai untuk mengukur akurasi estimasi.</p>
+                                <p class="mt-1 text-sm text-gray-500">Input data aktual setelah Project selesai untuk mengukur akurasi estimasi.</p>
                                 <div class="mt-6">
                                     <a href="{{ route('cocomo.actual-data-form', $project->id) }}" 
                                        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -1089,6 +1169,15 @@
 
             <!-- Action Buttons -->
             <div class="mt-4 flex flex-col sm:flex-row gap-4">
+                
+                <a href="{{ route('cocomo.edit', $project->id) }}" 
+                    class="inline-flex items-center justify-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    {{ __('Edit Project') }}
+                </a>
+
                 <a href="{{ route('cocomo.actual-data-form', $project->id) }}" 
                     class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1104,7 +1193,8 @@
                     {{ __('New Software Cost Estimation') }}
                 </a>
                 
-                <button onclick="window.print()" class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                <button onclick="window.print()" 
+                    class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/>
                     </svg>

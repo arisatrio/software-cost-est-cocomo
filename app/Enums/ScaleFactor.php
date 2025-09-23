@@ -29,7 +29,7 @@ enum ScaleFactor: string
             self::Prec => 'Seberapa familiar tim Anda dengan jenis proyek ini?',
             self::Flex => 'Seberapa fleksibel proses pengembangan yang akan diterapkan?',
             self::Resl => 'Sejauh mana arsitektur dan risiko proyek sudah dipahami di awal?',
-            self::Team => 'Bagaimana kohesi dan kerjasama tim Anda?',
+            self::Team => 'Bagaimana kerjasama tim Anda?',
             self::Pmat => 'Seberapa matang proses pengembangan di organisasi/tim Anda?',
         };
     }

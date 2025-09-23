@@ -15,6 +15,7 @@ Route::resource('cocomo', CocomoController::class)->middleware(['auth', 'verifie
 
 // Additional COCOMO routes for accuracy tracking
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/cocomo/{id}/results', [CocomoController::class, 'show'])->name('cocomo.results');
     Route::get('/cocomo/{id}/actual-data', [CocomoController::class, 'actualDataForm'])->name('cocomo.actual-data-form');
     Route::patch('/cocomo/{id}/actual-data', [CocomoController::class, 'updateActual'])->name('cocomo.update-actual');
     // Route::get('/accuracy-dashboard', [CocomoController::class, 'accuracyDashboard'])->name('cocomo.accuracy-dashboard');

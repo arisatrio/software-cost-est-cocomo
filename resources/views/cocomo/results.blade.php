@@ -644,10 +644,9 @@
                 </div>
             </div>
 
-            @if($project->status === 'Selesai')
-                <!-- Team & Schedule Adjustment Calculator (Collapsible) -->
-                <div class="mt-4 mb-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-4 border-b border-gray-200">
+            <!-- Team & Schedule Adjustment Calculator (Collapsible) -->
+            <div class="mt-4 mb-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-4 border-b border-gray-200">
                         <button onclick="toggleCalculator()" class="w-full flex items-center justify-between text-left">
                             <div class="flex items-center">
                                 <h3 class="text-lg font-semibold text-gray-900">Hitung Penyesuaian Tim & Waktu</h3>
@@ -878,7 +877,6 @@
                         calculateFromSchedule();
                     });
                 </script>
-            @endif
             
             <!-- Actual Data & Accuracy Section -->
             @if($project->actual_effort || $project->actual_schedule || $project->actual_personnel || $project->status !== 'planning')
